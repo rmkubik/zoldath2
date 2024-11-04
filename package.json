@@ -13,6 +13,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-transition-group": "^4.4.5",
+    "rimraf": "^6.0.1",
     "styled-components": "^6.1.13",
     "uuid": "^11.0.2"
   },
@@ -25,7 +26,11 @@
   },
   "scripts": {
     "start": "parcel src/index.html",
-    "build": "parcel build src/index.html"
+    "build:clean": "rimraf dist",
+    "build:app": "parcel build src/index.html --public-url='.'",
+    "build": "npm run build:clean && npm run build:app",
+    "deploy": "npm run build && npm run deploy:itch",
+    "deploy:itch": "butler push dist rmkubik/zoldath-2:html"
   },
   "author": "Ryan Kubik",
   "license": "UNLICENSED"
