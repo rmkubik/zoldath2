@@ -4,10 +4,22 @@
   "version": "3.0.0",
   "description": "",
   "dependencies": {
+    "@floating-ui/react": "^0.26.25",
+    "@types/styled-components": "^5.1.34",
+    "animate.css": "^4.1.1",
+    "functional-game-utils": "^2.5.0",
+    "ramda": "^0.26.1",
+    "ramda-adjunct": "^2.36.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-transition-group": "^4.4.5",
+    "styled-components": "^6.1.13",
+    "uuid": "^11.0.2"
   },
   "devDependencies": {
+    "@parcel/resolver-glob": "^2.12.0",
+    "@parcel/transformer-inline-string": "^2.12.0",
+    "@types/react": "^18.3.12",
     "parcel": "^2.12.0",
     "process": "^0.11.10"
   },
