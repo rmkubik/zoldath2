@@ -53,6 +53,7 @@ class Tracker {
   };
   public tracks: Record<string, Track> = {};
   public isLoaded = false;
+  public isStarted = false;
 
   constructor() {
     this.load();
@@ -61,22 +62,53 @@ class Tracker {
   async load() {
     const loadPromises = Object.entries(this.trackUrls).map(
       async ([key, url]) => {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const trackBuffer = await this.audioContext.decodeAudioData(
-          arrayBuffer
-        );
-        const track = new Track(trackBuffer, this.audioContext);
+        try {
+          const response = await fetch(url);
+          const arrayBuffer = await response.arrayBuffer();
+          const trackBuffer = await this.audioContext.decodeAudioData(
+            arrayBuffer
+          );
+          const track = new Track(trackBuffer, this.audioContext);
 
-        this.tracks[key] = track;
+          this.tracks[key] = track;
+        } catch (error) {
+          /**
+           * For some reason, the metronome tracks I added for testing
+           * seem to fail to load in Firefox. The track Brendan exported
+           * seems to work fine though. Not going to bother to try and
+           * fix those tracks. Just don't want them to cause the tracker
+           * to fail to load.
+           */
+          console.error(`Failed to load track: ${url}`);
+          console.error(error);
+        }
       }
     );
 
     await Promise.all(loadPromises);
 
+    this.isLoaded = true;
+  }
+
+  /**
+   * Wait to do this after user has interacted with the
+   * page so we can start the AudioContext.
+   */
+  start() {
+    if (!this.isLoaded) {
+      console.error(`Tried to start Tracker before finished loading.`);
+      return;
+    }
+
+    /**
+     * We don't need to start the tracks again if the tracker
+     * has already been started.
+     */
+    if (this.isStarted) return;
+
     Object.values(this.tracks).forEach((track) => track._start());
 
-    this.isLoaded = true;
+    this.isStarted = true;
   }
 }
 

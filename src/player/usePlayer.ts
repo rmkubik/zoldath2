@@ -252,6 +252,13 @@ const usePlayer = ({
             return;
           }
 
+          tracker.start();
+
+          if (!tracker.isStarted) {
+            console.error(`Tried to play a track, but tracker isn't started.`);
+            return;
+          }
+
           const track = tracker.tracks[trackName];
 
           if (!track) {
